@@ -1,0 +1,91 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-sm">
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/30 mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Unlock Vault</h1>
+            <p class="text-sm text-[#8b949e] mt-1">Enter your master encryption password</p>
+        </div>
+
+        <div class="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 shadow-2xl">
+            <div
+                class="flex items-start gap-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl px-4 py-3 mb-6 text-xs text-indigo-300">
+                <svg class="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Your password never leaves your browser. It derives an encryption key locally.</span>
+            </div>
+
+            <div id="unlock-error"
+                class="hidden flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 mb-5 text-sm">
+                <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd"
+                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                        clip-rule="evenodd" />
+                </svg>
+                <span id="unlock-error-msg"></span>
+            </div>
+
+            <form id="unlockForm" class="space-y-5">
+                <div>
+                    <label class="block text-sm font-medium text-[#c9d1d9] mb-1.5">Master Password</label>
+                    <input type="password" id="parent_password" required autofocus class="input-field"
+                        placeholder="Your vault encryption password">
+                </div>
+                <button type="submit" id="unlock-btn" class="btn-primary w-full py-3">
+                    Unlock Vault
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function deriveMasterKey(password) {
+        const enc = new TextEncoder();
+        const keyMaterial = await crypto.subtle.importKey('raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']);
+        const key = await crypto.subtle.deriveKey(
+            { name: 'PBKDF2', salt: enc.encode('neovault-master-key-v1'), iterations: 300000, hash: 'SHA-256' },
+            keyMaterial, { name: 'AES-GCM', length: 256 }, true, ['encrypt', 'decrypt']
+        );
+        const raw = await crypto.subtle.exportKey('raw', key);
+        return btoa(String.fromCharCode(...new Uint8Array(raw)));
+    }
+
+    document.getElementById('unlockForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const password = document.getElementById('parent_password').value;
+        const btn = document.getElementById('unlock-btn');
+        const errDiv = document.getElementById('unlock-error');
+        const errMsg = document.getElementById('unlock-error-msg');
+        btn.disabled = true; btn.textContent = 'Verifying...';
+        errDiv.classList.add('hidden');
+
+        const fd = new FormData();
+        fd.append('parent_password', password);
+        try {
+            const res = await fetch('/vault/unlock', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!res.ok) {
+                errMsg.textContent = data.error || 'Invalid password';
+                errDiv.classList.remove('hidden');
+                btn.disabled = false; btn.textContent = 'Unlock Vault';
+                return;
+            }
+            btn.textContent = 'Deriving key...';
+            const vaultKey = await deriveMasterKey(password);
+            sessionStorage.setItem('vault_key', vaultKey);
+            window.location.href = '/dashboard';
+        } catch (err) {
+            errMsg.textContent = 'Network error. Please try again.';
+            errDiv.classList.remove('hidden');
+            btn.disabled = false; btn.textContent = 'Unlock Vault';
+        }
+    });
+</script>

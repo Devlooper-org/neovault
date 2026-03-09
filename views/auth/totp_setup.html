@@ -1,0 +1,112 @@
+<div class="min-h-screen flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-lg">
+        <div class="flex flex-col items-center mb-8">
+            <div
+                class="w-14 h-14 bg-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-600/30 mb-4">
+                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+            </div>
+            <h1 class="text-2xl font-bold text-white">Setup Two-Factor Auth</h1>
+            <p class="text-sm text-[#8b949e] mt-1">Strongly recommended to protect your vault</p>
+        </div>
+
+        <!-- Recommendation notice -->
+        <div
+            class="flex items-start gap-3 bg-amber-500/10 border border-amber-500/30 rounded-xl px-4 py-3 mb-6 text-sm text-amber-300">
+            <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-2.194-.833-2.964 0L3.34 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <span>Without 2FA, anyone who knows your password can fully access your vault. We <strong>strongly
+                    recommend</strong> enabling it.</span>
+        </div>
+
+        {{if .Error}}
+        <div
+            class="flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 mb-5 text-sm">
+            <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                    clip-rule="evenodd" />
+            </svg>
+            {{.Error}}
+        </div>
+        {{end}}
+
+        <div class="bg-[#161b22] border border-[#30363d] rounded-2xl p-8 shadow-2xl">
+            <!-- QR Code section -->
+            <div class="flex flex-col items-center mb-6">
+                <div class="bg-white p-3 rounded-xl mb-3">
+                    <img src="{{.QRCode}}" alt="QR Code" class="w-44 h-44">
+                </div>
+                <p class="text-sm text-[#8b949e] text-center mb-2">Scan with Google Authenticator, Authy, or any TOTP
+                    app</p>
+                <div class="flex items-center gap-2 bg-[#0d1117] border border-[#30363d] rounded-lg px-3 py-2 w-full">
+                    <code class="text-xs font-mono text-[#8b949e] break-all flex-1 select-all">{{.Secret}}</code>
+                    <button
+                        onclick="navigator.clipboard.writeText('{{.Secret}}').then(() => this.textContent='✓').catch(()=>{})"
+                        class="text-[#484f58] hover:text-indigo-400 transition text-xs flex-shrink-0 px-2 py-1 rounded">Copy</button>
+                </div>
+            </div>
+
+            <!-- Verify form -->
+            <form action="/totp/verify" method="POST" class="space-y-4 border-t border-[#30363d] pt-6">
+                <input type="hidden" name="user_id" value="{{.UserID}}">
+                <input type="hidden" name="secret" value="{{.Secret}}">
+                <div>
+                    <label class="block text-sm font-medium text-[#c9d1d9] mb-1.5">Confirm with 6-digit code</label>
+                    <input type="text" name="code" required
+                        class="input-field text-center tracking-[0.4em] text-xl font-mono" placeholder="000000"
+                        maxlength="6" pattern="\d{6}">
+                </div>
+                <button type="submit" class="btn-primary w-full py-3">
+                    Verify & Complete Setup
+                </button>
+            </form>
+
+            <!-- Skip option with countdown -->
+            <div class="mt-4 pt-4 border-t border-[#30363d]">
+                <p id="skip-timer-txt" class="text-xs text-center text-[#484f58]">
+                    Skip option available in <span id="skip-cd" class="font-bold text-[#8b949e]">5</span>s
+                </p>
+                <div id="skip-btn-area" class="hidden">
+                    <button onclick="document.getElementById('skip-confirm').classList.toggle('hidden')"
+                        class="w-full text-xs text-[#484f58] hover:text-[#8b949e] py-1 transition">
+                        Skip 2FA setup (not recommended) →
+                    </button>
+                </div>
+                <div id="skip-confirm" class="hidden mt-3 bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                    <p class="text-xs text-red-400 mb-3">⚠️ You will lose significant security protection without 2FA.
+                        Are you sure?</p>
+                    <form action="/totp/skip" method="POST">
+                        <input type="hidden" name="user_id" value="{{.UserID}}">
+                        <button type="submit"
+                            class="w-full text-xs py-2 px-4 rounded-lg border border-red-500/50 text-red-400 hover:bg-red-500/10 transition">
+                            Yes, skip 2FA setup — I understand the risk
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function () {
+        let s = 5;
+        const cd = document.getElementById('skip-cd');
+        const txt = document.getElementById('skip-timer-txt');
+        const btn = document.getElementById('skip-btn-area');
+        const t = setInterval(() => {
+            s--;
+            if (cd) cd.textContent = s;
+            if (s <= 0) {
+                clearInterval(t);
+                if (txt) txt.classList.add('hidden');
+                if (btn) btn.classList.remove('hidden');
+            }
+        }, 1000);
+    })();
+</script>

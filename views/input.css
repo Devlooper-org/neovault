@@ -1,0 +1,59 @@
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer components {
+
+    /* ── Core glass card ── */
+    .glass {
+        @apply bg-white/80 backdrop-blur-xl border border-white/40 shadow-xl;
+    }
+
+    /* ── Auth card (centered on page) ── */
+    .auth-card {
+        @apply bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl;
+    }
+
+    /* ── Primary button ── */
+    .btn-primary {
+        @apply px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-500 active:scale-[0.98] transition-all duration-150 flex justify-center items-center gap-2 shadow-lg shadow-indigo-600/25 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-[#0d1117];
+    }
+
+    /* ── Danger button ── */
+    .btn-danger {
+        @apply px-5 py-2.5 bg-red-600 text-white font-semibold rounded-xl hover:bg-red-500 active:scale-[0.98] transition-all duration-150 flex justify-center items-center gap-2 shadow-lg shadow-red-600/25 focus:outline-none focus:ring-2 focus:ring-red-500;
+    }
+
+    /* ── Ghost / secondary button ── */
+    .btn-ghost {
+        @apply px-5 py-2.5 bg-[#21262d] text-[#c9d1d9] font-medium rounded-xl border border-[#30363d] hover:bg-[#30363d] hover:border-[#8b949e] active:scale-[0.98] transition-all duration-150 flex justify-center items-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#30363d];
+    }
+
+    /* ── Text input ── */
+    .input-field {
+        @apply w-full px-4 py-3 bg-[#0d1117] border border-[#30363d] rounded-xl text-[#c9d1d9] placeholder-[#484f58] text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-150;
+    }
+
+    /* ── Icon badge (credential avatar) ── */
+    .cred-icon {
+        @apply w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-inner flex-shrink-0;
+    }
+
+    /* ── Badge / tag ── */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+
+    /* ── Sidebar nav item ── */
+    .nav-item {
+        @apply flex items-center gap-3 px-4 py-2.5 rounded-xl text-[#8b949e] text-sm font-medium hover:bg-[#21262d] hover:text-[#c9d1d9] transition-all duration-150 cursor-pointer;
+    }
+
+    .nav-item.active {
+        @apply bg-indigo-600/20 text-indigo-400 border border-indigo-500/30;
+    }
+
+    /* ── Section header ── */
+    .section-header {
+        @apply text-xs font-semibold uppercase tracking-widest text-[#484f58] px-4 mb-1;
+    }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "neovault",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build:css": "tailwindcss -i ./views/input.css -o ./public/css/style.css --minify"
+  },
+  "keywords": [],
+  "author": "",
+  "type": "module",
+  "devDependencies": {
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.1",
+    "@tailwindcss/cli": "^4.2.1"
+  }
+}

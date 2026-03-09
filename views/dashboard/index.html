@@ -1,0 +1,792 @@
+<!-- Full-page sidebar layout -->
+<div class="flex flex-col md:flex-row min-h-screen">
+
+    <!-- Mobile Header -->
+    <header
+        class="md:hidden flex items-center justify-between px-5 py-4 bg-[#161b22] border-b border-[#30363d] sticky top-0 z-40">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center shadow-md">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <span class="text-white font-bold text-sm">NeoVault</span>
+        </div>
+        <button onclick="toggleSidebar()" class="text-[#8b949e] hover:text-white transition">
+            <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </header>
+
+    <!-- Sidebar Backdrop -->
+    <div id="sidebar-backdrop" onclick="toggleSidebar()"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 hidden md:hidden"></div>
+
+    <!-- Sidebar -->
+    <aside id="main-sidebar"
+        class="fixed inset-y-0 left-0 w-64 translate-x-[-100%] md:translate-x-0 md:static md:flex flex-shrink-0 bg-[#161b22] border-r border-[#30363d] flex-col z-50 transition-transform duration-300 ease-in-out">
+        <!-- Logo -->
+        <div class="flex items-center gap-3 px-5 py-5 border-b border-[#30363d]">
+            <div class="w-9 h-9 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+            </div>
+            <div>
+                <p class="text-white font-bold text-sm leading-none">NeoVault</p>
+                <p class="text-[#484f58] text-xs mt-0.5">Secure Manager</p>
+            </div>
+        </div>
+
+        <!-- Nav -->
+        <nav class="flex-1 py-4 px-3 space-y-1">
+            <p class="section-header mb-2">Menu</p>
+            <a onclick="showSection('vault')" id="nav-vault" class="nav-item active cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                </svg>
+                My Vault
+            </a>
+            <a onclick="showSection('add')" id="nav-add" class="nav-item cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Add Credential
+            </a>
+            <a onclick="showSection('settings')" id="nav-settings" class="nav-item cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Settings
+            </a>
+        </nav>
+
+        <!-- User + sign out -->
+        <div class="p-3 border-t border-[#30363d]">
+            <a href="/logout" class="nav-item text-red-400 hover:text-red-300 hover:bg-red-500/10">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+                Sign Out
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 min-h-screen bg-[#0d1117] overflow-y-auto">
+
+        <!-- Vault Section -->
+        <section id="section-vault" class="p-8">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white">My Vault</h2>
+                <p class="text-[#8b949e] text-sm mt-1">{{len .Entries}} credential{{if ne (len .Entries) 1}}s{{end}}
+                    stored</p>
+            </div>
+
+            {{if not .Entries}}
+            <div class="flex flex-col items-center justify-center py-24 text-center">
+                <div class="w-16 h-16 bg-[#21262d] rounded-2xl flex items-center justify-center mb-4">
+                    <svg class="w-8 h-8 text-[#484f58]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold text-[#c9d1d9]">Vault is empty</h3>
+                <p class="text-[#8b949e] text-sm mt-2 max-w-xs">Add your first credential using the <strong>Add
+                        Credential</strong> tab.</p>
+                <button onclick="showSection('add')" class="btn-primary mt-6 px-6">Add Your First Credential</button>
+            </div>
+            {{else}}
+            <div class="space-y-2 max-w-3xl">
+                {{range .Entries}}
+                <div
+                    class="flex items-center gap-4 bg-[#161b22] border border-[#30363d] rounded-xl px-5 py-4 hover:border-indigo-500/40 hover:bg-[#1c2128] transition-all duration-150 group">
+                    <!-- Icon -->
+                    <div class="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-base flex-shrink-0"
+                        style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                        {{slice .Website 0 1}}
+                    </div>
+                    <!-- Info -->
+                    <div class="flex-1 min-w-0">
+                        <p class="text-[#c9d1d9] font-semibold text-sm truncate">{{.Website}}</p>
+                        <p class="text-[#8b949e] text-xs truncate mt-0.5">{{.WebsiteUsername}}</p>
+                    </div>
+                    <!-- 2FA badge -->
+                    {{if .TOTPSecret}}
+                    <span
+                        class="badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 flex-shrink-0">2FA</span>
+                    {{else}}
+                    <span class="badge bg-[#21262d] text-[#484f58] border border-[#30363d] flex-shrink-0">No 2FA</span>
+                    {{end}}
+                    <!-- Actions (hover) -->
+                    <div
+                        class="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                        <button data-id="{{.ID}}" data-website="{{.Website}}"
+                            data-has-totp="{{if .TOTPSecret}}true{{else}}false{{end}}" onclick="handleView(this)"
+                            class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium rounded-lg transition">
+                            View
+                        </button>
+                        <button data-id="{{.ID}}" data-website="{{.Website}}"
+                            data-has-totp="{{if .TOTPSecret}}true{{else}}false{{end}}" onclick="handleDelete(this)"
+                            class="px-3 py-1.5 bg-transparent hover:bg-red-500/15 text-[#8b949e] hover:text-red-400 border border-[#30363d] hover:border-red-500/40 text-xs font-medium rounded-lg transition">
+                            Delete
+                        </button>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+            {{end}}
+        </section>
+
+        <!-- Add Credential Section -->
+        <section id="section-add" class="p-8 hidden">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white">Add Credential</h2>
+                <p class="text-[#8b949e] text-sm mt-1">Passwords are encrypted in your browser before storage.</p>
+            </div>
+
+            <form id="addForm" class="max-w-lg space-y-5">
+                <div class="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 space-y-4">
+                    <h3 class="text-sm font-semibold text-[#c9d1d9] flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                        Credential Details
+                    </h3>
+                    <div>
+                        <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Website /
+                            App</label>
+                        <input type="text" id="add-website" required class="input-field" placeholder="e.g. github.com">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Username
+                            / Email</label>
+                        <input type="text" id="add-username" required class="input-field" placeholder="you@example.com">
+                    </div>
+                    <div>
+                        <label
+                            class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Password</label>
+                        <div class="relative">
+                            <input type="password" id="add-password" required class="input-field pr-12"
+                                placeholder="••••••••">
+                            <button type="button" onclick="togglePwd('add-password', this)"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-[#484f58] hover:text-[#8b949e] transition">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2FA Setup -->
+                <div class="bg-[#161b22] border border-[#30363d] rounded-2xl p-6 space-y-4" id="totp-section">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm font-semibold text-[#c9d1d9] flex items-center gap-2">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                            </svg>
+                            Credential 2FA (Recommended)
+                        </h3>
+                        <span id="totp-status-badge"
+                            class="badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Enabled</span>
+                    </div>
+
+                    <div id="totp-scan-area">
+                        <p class="text-xs text-[#8b949e] mb-3">Scan this QR code in your authenticator app. It is unique
+                            to this credential.</p>
+                        <div class="flex justify-center mb-3">
+                            <div class="bg-white p-2 rounded-xl" id="qrcode-container">
+                                <!-- QR Code injected here -->
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 mb-3">
+                            <p id="display-totp-secret"
+                                class="text-[10px] text-center text-[#484f58] font-mono tracking-widest"></p>
+                            <button type="button" onclick="copyTotpSecret()"
+                                class="text-[10px] text-indigo-400 hover:text-indigo-300 transition flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10" />
+                                </svg>
+                                Copy Secret Key
+                            </button>
+                        </div>
+                    </div>
+                    <input type="hidden" id="add-totp-secret">
+
+                    <div id="totp-input-area">
+                        <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Confirm
+                            TOTP Code</label>
+                        <input type="text" id="add-totp-code"
+                            class="input-field font-mono tracking-[0.3em] text-center text-lg" placeholder="000000"
+                            maxlength="6">
+                    </div>
+
+                    <!-- Skip countdown -->
+                    <div class="pt-2 border-t border-[#21262d]">
+                        <p id="skip-totp-timer" class="text-xs text-center text-[#484f58]">
+                            Skip 2FA available in <span id="skip-countdown"
+                                class="font-semibold text-[#8b949e]">5</span>s
+                        </p>
+                        <div id="skip-totp-btn-area" class="hidden text-center mt-1">
+                            <button type="button" onclick="toggleSkipTotp()"
+                                class="text-xs text-[#484f58] hover:text-[#8b949e] transition">
+                                Skip credential 2FA (not recommended)
+                            </button>
+                        </div>
+                        <div id="skip-totp-warning"
+                            class="hidden mt-3 bg-amber-500/10 border border-amber-500/30 rounded-xl p-3 text-xs text-amber-300">
+                            ⚠️ Without 2FA, this credential is protected only by your vault session.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="add-error"
+                    class="hidden flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 text-sm">
+                </div>
+
+                <button type="submit" id="add-btn" class="btn-primary w-full py-3">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Encrypt & Save Credential
+                </button>
+            </form>
+        </section>
+
+        <!-- Settings Section -->
+        <section id="section-settings" class="p-8 hidden">
+            <div class="mb-8">
+                <h2 class="text-2xl font-bold text-white">Settings</h2>
+                <p class="text-[#8b949e] text-sm mt-1">Manage your account security.</p>
+            </div>
+
+            <div class="max-w-lg space-y-4">
+                <!-- Change account password card -->
+                <div class="bg-[#161b22] border border-[#30363d] rounded-2xl p-6">
+                    <h3 class="text-sm font-semibold text-[#c9d1d9] mb-1 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                        </svg>
+                        Change Account Password
+                    </h3>
+                    <p class="text-xs text-[#8b949e] mb-5">This is your login password, not the vault master password.
+                    </p>
+
+                    <div id="chpwd-success"
+                        class="hidden flex items-center gap-3 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-xl px-4 py-3 mb-4 text-sm">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                        </svg>
+                        Password changed successfully.
+                    </div>
+                    <div id="chpwd-error"
+                        class="hidden flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 mb-4 text-sm">
+                        <svg class="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span id="chpwd-error-msg"></span>
+                    </div>
+
+                    <form id="changePasswordForm" class="space-y-4">
+                        <div>
+                            <label
+                                class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Current
+                                Password</label>
+                            <input type="password" id="cp-current" required class="input-field"
+                                placeholder="Your current login password">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">New
+                                Password</label>
+                            <input type="password" id="cp-new" required class="input-field"
+                                placeholder="New strong password">
+                        </div>
+                        <div>
+                            <label
+                                class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">Confirm
+                                New Password</label>
+                            <input type="password" id="cp-confirm" required class="input-field"
+                                placeholder="Repeat new password">
+                        </div>
+                        <button type="submit" id="chpwd-btn" class="btn-primary py-2.5 px-6">
+                            Update Password
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Danger zone -->
+                <div class="bg-[#161b22] border border-red-500/20 rounded-2xl p-6">
+                    <h3 class="text-sm font-semibold text-red-400 mb-1">Danger Zone</h3>
+                    <p class="text-xs text-[#8b949e] mb-4">Signing out ends your vault session. Your encrypted data
+                        remains safe.</p>
+                    <a href="/logout" class="btn-danger py-2.5 px-6 inline-flex">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Sign Out
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<!-- Decrypt Modal -->
+<div id="decryptModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDecryptModal()"></div>
+    <div
+        class="relative bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl w-full max-w-md z-10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[#30363d]">
+            <h3 class="text-base font-bold text-white">View Credential</h3>
+            <button onclick="closeDecryptModal()" class="text-[#484f58] hover:text-[#8b949e] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-sm text-[#8b949e] mb-5">Decrypting <span id="modal-website"
+                    class="text-white font-semibold"></span></p>
+            <form id="decryptForm" onsubmit="event.preventDefault(); submitDecrypt();" class="space-y-4">
+                <input type="hidden" id="modal-entry-id">
+                <div id="modal-totp-row">
+                    <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">TOTP
+                        Code</label>
+                    <input type="text" id="modal-totp"
+                        class="input-field font-mono tracking-[0.3em] text-center text-xl" placeholder="000000"
+                        maxlength="6">
+                    <p id="modal-totp-hint" class="text-xs text-[#484f58] mt-1.5 text-center">Enter the code from your
+                        authenticator app</p>
+                </div>
+                <div id="decrypt-error"
+                    class="hidden flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 text-sm">
+                </div>
+                <div id="decrypt-result" class="hidden bg-[#0d1117] border border-[#30363d] rounded-xl p-4">
+                    <p class="text-xs text-[#484f58] mb-2 uppercase tracking-wide">Decrypted Password</p>
+                    <div class="flex items-center gap-3">
+                        <code id="decrypted-text" class="flex-1 text-[#c9d1d9] font-mono text-sm break-all"></code>
+                        <button type="button" onclick="copyDecrypted()"
+                            class="flex-shrink-0 p-2 bg-[#21262d] hover:bg-[#30363d] rounded-lg border border-[#30363d] text-[#8b949e] hover:text-white transition">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="flex gap-3 mt-2">
+                    <button type="button" onclick="closeDecryptModal()" class="btn-ghost flex-1 py-2.5">Cancel</button>
+                    <button type="submit" id="decrypt-btn" class="btn-primary flex-1 py-2.5">Decrypt</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+    <div
+        class="relative bg-[#161b22] border border-[#30363d] rounded-2xl shadow-2xl w-full max-w-sm z-10 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-[#30363d]">
+            <h3 class="text-base font-bold text-red-400">Delete Credential</h3>
+            <button onclick="closeDeleteModal()" class="text-[#484f58] hover:text-[#8b949e] transition">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <div class="p-6">
+            <p class="text-sm text-[#8b949e] mb-1">Permanently deleting</p>
+            <p class="text-white font-semibold mb-5" id="delete-modal-website"></p>
+            <div id="delete-totp-row" class="mb-4">
+                <label class="block text-xs font-medium text-[#8b949e] mb-1.5 uppercase tracking-wide">TOTP Code</label>
+                <input type="text" id="delete-modal-totp" maxlength="6"
+                    class="input-field font-mono tracking-[0.3em] text-center text-xl" placeholder="000000">
+            </div>
+            <div id="delete-error"
+                class="hidden flex items-center gap-3 bg-red-500/10 border border-red-500/30 text-red-400 rounded-xl px-4 py-3 mb-4 text-sm">
+            </div>
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="btn-ghost flex-1 py-2.5">Cancel</button>
+                <button id="delete-btn" onclick="submitDelete()" class="btn-danger flex-1 py-2.5">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Section navigation
+    function showSection(name) {
+        ['vault', 'add', 'settings'].forEach(s => {
+            const section = document.getElementById('section-' + s);
+            const nav = document.getElementById('nav-' + s);
+            if (section) section.classList.toggle('hidden', s !== name);
+            if (nav) nav.classList.toggle('active', s === name);
+        });
+        if (name === 'add') initAddTotp();
+
+        if (window.innerWidth < 768) {
+            toggleSidebar(false);
+        }
+    }
+
+    function handleView(btn) {
+        openDecryptModal(btn.dataset.id, btn.dataset.website, btn.dataset.hasTotp === 'true');
+    }
+
+    function handleDelete(btn) {
+        openDeleteModal(btn.dataset.id, btn.dataset.website, btn.dataset.hasTotp === 'true');
+    }
+
+    // Sidebar Toggle
+    function toggleSidebar(force) {
+        const sidebar = document.getElementById('main-sidebar');
+        const backdrop = document.getElementById('sidebar-backdrop');
+        const isHidden = sidebar.classList.contains('translate-x-[-100%]');
+        const show = typeof force === 'boolean' ? force : isHidden;
+
+        if (show) {
+            sidebar.classList.remove('translate-x-[-100%]');
+            backdrop.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        } else {
+            sidebar.classList.add('translate-x-[-100%]');
+            backdrop.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Password visibility toggle
+    function togglePwd(id, btn) {
+        const el = document.getElementById(id);
+        el.type = el.type === 'password' ? 'text' : 'password';
+    }
+
+    // Crypto helpers
+    async function derivePerCredentialKey(website) {
+        const b64 = sessionStorage.getItem('vault_key');
+        const raw = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const hkdfKey = await crypto.subtle.importKey('raw', raw, 'HKDF', false, ['deriveKey']);
+        const enc = new TextEncoder();
+        return crypto.subtle.deriveKey(
+            { name: 'HKDF', hash: 'SHA-256', salt: enc.encode(website), info: enc.encode('neovault-per-credential-v1') },
+            hkdfKey, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+        );
+    }
+
+    async function encryptLocal(plaintext, website) {
+        const key = await derivePerCredentialKey(website);
+        const iv = crypto.getRandomValues(new Uint8Array(12));
+        const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plaintext));
+        const combined = new Uint8Array(iv.length + ct.byteLength);
+        combined.set(iv); combined.set(new Uint8Array(ct), iv.length);
+        return btoa(String.fromCharCode(...combined));
+    }
+
+    async function decryptLocal(b64, website) {
+        const key = await derivePerCredentialKey(website);
+        const combined = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: combined.slice(0, 12) }, key, combined.slice(12));
+        return new TextDecoder().decode(decrypted);
+    }
+
+    // Skip 2FA countdown
+    let _totpSkipped = false;
+    (function () {
+        let s = 5;
+        const cd = document.getElementById('skip-countdown');
+        const timerEl = document.getElementById('skip-totp-timer');
+        const btnArea = document.getElementById('skip-totp-btn-area');
+        const t = setInterval(() => {
+            s--;
+            if (cd) cd.textContent = s;
+            if (s <= 0) {
+                clearInterval(t);
+                if (timerEl) timerEl.classList.add('hidden');
+                if (btnArea) btnArea.classList.remove('hidden');
+            }
+        }, 1000);
+    })();
+
+    function toggleSkipTotp() {
+        _totpSkipped = !_totpSkipped;
+        const scan = document.getElementById('totp-scan-area');
+        const input = document.getElementById('totp-input-area');
+        const warn = document.getElementById('skip-totp-warning');
+        const badge = document.getElementById('totp-status-badge');
+        const btn = document.querySelector('#skip-totp-btn-area button');
+        if (_totpSkipped) {
+            scan.classList.add('hidden'); input.classList.add('hidden');
+            warn.classList.remove('hidden');
+            badge.className = 'badge bg-[#21262d] text-[#484f58] border border-[#30363d]';
+            badge.textContent = 'Disabled';
+            btn.textContent = 'Re-enable 2FA for this credential';
+        } else {
+            scan.classList.remove('hidden'); input.classList.remove('hidden');
+            warn.classList.add('hidden');
+            badge.className = 'badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/30';
+            badge.textContent = 'Enabled';
+            btn.textContent = 'Skip credential 2FA (not recommended)';
+        }
+    }
+
+    // TOTP Generation
+    let qrcode = null;
+    function generateBase32Secret(length = 16) {
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567';
+        let secret = '';
+        for (let i = 0; i < length; i++) {
+            secret += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return secret;
+    }
+
+    function updateTOTPQrCode() {
+        const website = document.getElementById('add-website').value || 'Site';
+        const username = document.getElementById('add-username').value || 'User';
+        const secret = document.getElementById('add-totp-secret').value;
+
+        const dynamicIssuer = `NeoVault`;
+        const dynamicAccount = `${website} (${username})`;
+
+        const otpauth = `otpauth://totp/${encodeURIComponent(dynamicIssuer)}:${encodeURIComponent(dynamicAccount)}?secret=${secret}&issuer=${encodeURIComponent(dynamicIssuer)}`;
+
+        const container = document.getElementById('qrcode-container');
+        if (!qrcode) {
+            container.innerHTML = '';
+            qrcode = new QRCode(container, {
+                text: otpauth,
+                width: 144,
+                height: 144,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } else {
+            qrcode.clear();
+            qrcode.makeCode(otpauth);
+        }
+        document.getElementById('display-totp-secret').textContent = secret;
+    }
+
+    function copyTotpSecret() {
+        const secret = document.getElementById('add-totp-secret').value;
+        if (!secret) return;
+        navigator.clipboard.writeText(secret).then(() => {
+            const btn = document.querySelector('button[onclick="copyTotpSecret()"]');
+            const original = btn.innerHTML;
+            btn.innerHTML = '<svg class="w-3 h-3 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Copied!';
+            setTimeout(() => btn.innerHTML = original, 2000);
+        });
+    }
+
+    // Initialize secret and listeners
+    function initAddTotp() {
+        const secretInput = document.getElementById('add-totp-secret');
+        if (secretInput) {
+            secretInput.value = generateBase32Secret();
+            updateTOTPQrCode();
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        initAddTotp();
+        const inputs = ['add-website', 'add-username'];
+        inputs.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', updateTOTPQrCode);
+        });
+    });
+
+    // Add credential form
+    document.getElementById('addForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!sessionStorage.getItem('vault_key')) { window.location.href = '/vault/unlock'; return; }
+        const website = document.getElementById('add-website').value;
+        const username = document.getElementById('add-username').value;
+        const password = document.getElementById('add-password').value;
+        const totpSecret = _totpSkipped ? '' : document.getElementById('add-totp-secret').value;
+        const totpCode = _totpSkipped ? '' : document.getElementById('add-totp-code').value;
+        const errDiv = document.getElementById('add-error');
+        const btn = document.getElementById('add-btn');
+        errDiv.classList.add('hidden');
+        btn.disabled = true; btn.textContent = 'Encrypting...';
+        try {
+            const encryptedPassword = await encryptLocal(password, website);
+            const fd = new FormData();
+            fd.append('website', website); fd.append('username', username);
+            fd.append('encrypted_password', encryptedPassword);
+            fd.append('totp_secret', totpSecret); fd.append('totp_code', totpCode);
+            const res = await fetch('/vault/add', { method: 'POST', body: fd });
+            if (res.redirected) { window.location.href = res.url; return; }
+            if (!res.ok) {
+                const text = await res.text();
+                let d = null; try { d = JSON.parse(text); } catch (_) { }
+                if (d && d.vault_locked) { window.location.href = '/vault/unlock'; return; }
+                throw new Error(text || 'Failed to save');
+            }
+            window.location.reload();
+        } catch (err) {
+            errDiv.textContent = err.message;
+            errDiv.classList.remove('hidden');
+            btn.disabled = false;
+            btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg> Encrypt & Save Credential';
+        }
+    });
+
+    // Decrypt Modal
+    function openDecryptModal(id, website, hasTotp) {
+        document.getElementById('modal-entry-id').value = id;
+        document.getElementById('modal-website').textContent = website;
+        document.getElementById('modal-totp').value = '';
+        document.getElementById('decrypt-error').classList.add('hidden');
+        document.getElementById('decrypt-result').classList.add('hidden');
+        const totpRow = document.getElementById('modal-totp-row');
+        const hint = document.getElementById('modal-totp-hint');
+        totpRow.classList.toggle('hidden', !hasTotp);
+        if (hint) hint.textContent = hasTotp ? 'Enter the code from your authenticator app' : '';
+        const btn = document.getElementById('decrypt-btn');
+        btn.classList.remove('hidden');
+        btn.textContent = 'Decrypt';
+        document.getElementById('decryptModal').classList.remove('hidden');
+    }
+    function closeDecryptModal() { document.getElementById('decryptModal').classList.add('hidden'); }
+
+    async function submitDecrypt() {
+        if (!sessionStorage.getItem('vault_key')) { window.location.href = '/vault/unlock'; return; }
+        const id = document.getElementById('modal-entry-id').value;
+        const totpCode = document.getElementById('modal-totp').value;
+        const errDiv = document.getElementById('decrypt-error');
+        const resultDiv = document.getElementById('decrypt-result');
+        const btn = document.getElementById('decrypt-btn');
+        btn.textContent = 'Decrypting...';
+        try {
+            const fd = new FormData();
+            fd.append('totp_code', totpCode);
+            const res = await fetch(`/vault/decrypt/${id}`, { method: 'POST', body: fd });
+            if (!res.ok) {
+                const text = await res.text();
+                let d = null; try { d = JSON.parse(text); } catch (_) { }
+                if (d && d.vault_locked) { window.location.href = '/vault/unlock'; return; }
+                throw new Error(text || 'Request failed');
+            }
+            const { ciphertext, website } = await res.json();
+            const decryptedPassword = await decryptLocal(ciphertext, website);
+            errDiv.classList.add('hidden');
+            resultDiv.classList.remove('hidden');
+            document.getElementById('decrypted-text').textContent = decryptedPassword;
+            btn.classList.add('hidden');
+        } catch (err) {
+            errDiv.textContent = err.name === 'OperationError' ? 'Decryption failed. Master password may have changed.' : err.message;
+            errDiv.classList.remove('hidden');
+            btn.textContent = 'Try Again';
+        }
+    }
+
+    function copyDecrypted() {
+        const text = document.getElementById('decrypted-text').textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = document.querySelector('#decrypt-result button');
+            btn.innerHTML = '<svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+            setTimeout(() => btn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10"/></svg>', 2000);
+        });
+    }
+
+    // Delete Modal
+    let _deleteEntryId = null;
+    function openDeleteModal(id, website, hasTotp) {
+        _deleteEntryId = id;
+        document.getElementById('delete-modal-website').textContent = website;
+        document.getElementById('delete-modal-totp').value = '';
+        document.getElementById('delete-error').classList.add('hidden');
+        document.getElementById('delete-totp-row').classList.toggle('hidden', !hasTotp);
+        const btn = document.getElementById('delete-btn');
+        btn.disabled = false; btn.textContent = 'Delete';
+        document.getElementById('deleteModal').classList.remove('hidden');
+    }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); _deleteEntryId = null; }
+
+    async function submitDelete() {
+        const totpCode = document.getElementById('delete-modal-totp').value;
+        const errDiv = document.getElementById('delete-error');
+        const btn = document.getElementById('delete-btn');
+        btn.disabled = true; btn.textContent = 'Deleting...';
+        const fd = new FormData();
+        fd.append('totp_code', totpCode);
+        try {
+            const res = await fetch(`/vault/delete/${_deleteEntryId}`, { method: 'POST', body: fd });
+            if (!res.ok) {
+                let d = null; try { d = await res.json(); } catch (_) { }
+                if (d && d.vault_locked) { window.location.href = '/vault/unlock'; return; }
+                throw new Error((d && d.error) || await res.text() || 'Failed to delete');
+            }
+            window.location.reload();
+        } catch (err) {
+            errDiv.textContent = err.message;
+            errDiv.classList.remove('hidden');
+            btn.disabled = false; btn.textContent = 'Delete';
+        }
+    }
+
+    // Change Account Password
+    document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const current = document.getElementById('cp-current').value;
+        const newPwd = document.getElementById('cp-new').value;
+        const confirm = document.getElementById('cp-confirm').value;
+        const btn = document.getElementById('chpwd-btn');
+        const errDiv = document.getElementById('chpwd-error');
+        const errMsg = document.getElementById('chpwd-error-msg');
+        const successDiv = document.getElementById('chpwd-success');
+        errDiv.classList.add('hidden'); successDiv.classList.add('hidden');
+        if (newPwd !== confirm) {
+            errMsg.textContent = 'New passwords do not match';
+            errDiv.classList.remove('hidden'); return;
+        }
+        btn.disabled = true; btn.textContent = 'Updating...';
+        const fd = new FormData();
+        fd.append('current_password', current);
+        fd.append('new_password', newPwd);
+        try {
+            const res = await fetch('/settings/change-password', { method: 'POST', body: fd });
+            const data = await res.json();
+            if (!res.ok) {
+                errMsg.textContent = data.error || 'Failed to change password';
+                errDiv.classList.remove('hidden');
+            } else {
+                successDiv.classList.remove('hidden');
+                document.getElementById('changePasswordForm').reset();
+            }
+        } catch (err) {
+            errMsg.textContent = 'Network error. Please try again.';
+            errDiv.classList.remove('hidden');
+        }
+        btn.disabled = false; btn.textContent = 'Update Password';
+    });
+
+    // Guard
+    if (!sessionStorage.getItem('vault_key')) {
+        window.location.href = '/vault/unlock';
+    }
+</script>
